@@ -1,8 +1,8 @@
 import { Table, Button } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { changeCount } from "./store.js"
-import { increase } from "./store/userSlice.js";
+import { changeCount } from "../../store.js"
+import { increase } from "../../store/userSlice.js";
 import { useEffect, useState } from "react";
 import axios from "axios";
 

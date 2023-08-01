@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from 'react-router-dom'
 import { Nav } from "react-bootstrap"
-import './App.css'
-import { addItem } from "./store.js";
+import '../../App.css'
+import { addItem } from "../../store.js";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import './Detail.css'
 
-import proImg from './img/proImg0.webp'
-import thumbnail1 from './img/thumbnail1.webp'
-import thumbnail2 from './img/thumbnail2.webp'
-import thumbnail3 from './img/thumbnail3.webp'
-import thumbnail4 from './img/thumbnail4.webp'
+import proImg from '../../assets/img/proImg0.webp'
+import thumbnail1 from '../../assets/img/thumbnail1.webp'
+import thumbnail2 from '../../assets/img/thumbnail2.webp'
+import thumbnail3 from '../../assets/img/thumbnail3.webp'
+import thumbnail4 from '../../assets/img/thumbnail4.webp'
 
 function Detail(props) {
     let { id } = useParams();

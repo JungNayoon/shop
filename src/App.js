@@ -8,28 +8,31 @@ import axios from 'axios';
 * Route : 페이지  <Route path="/detail" element={<div></div>}/>
 * Link : 페이지 이동 <Link to="/detail">상세페이지</Link> 
 */
-import Detail from './Detail.js';
-import Cart from './Cart.js';
-import mainImg from './img/mainImg.png'
-import first from './img/firstcarousel.jpg'
-import second from './img/secondcarousel.jpg'
-import third from './img/thirdcarousel.jpg'
-import proImg0 from './img/proImg0.webp'
-import proImg1 from './img/proImg1.webp'
-import proImg2 from './img/proImg2.webp'
-import proImg3 from './img/proImg3.webp'
-import proImg4 from './img/proImg4.webp'
-import proImg5 from './img/proImg5.webp'
-import proImg6 from './img/proImg6.webp'
-import proImg7 from './img/proImg7.webp'
-import proImg8 from './img/proImg8.webp'
-import proImg9 from './img/proImg9.webp'
-import proImg10 from './img/proImg10.webp'
-import proImg11 from './img/proImg11.webp'
-import proImg12 from './img/proImg12.webp'
-import proImg13 from './img/proImg13.webp'
-import proImg14 from './img/proImg14.webp'
-import proImg15 from './img/proImg15.webp'
+import Detail from './pages/Detail/Detail.js';
+import Cart from './pages/Cart/Cart.js';
+import Login from './pages/Login/Login.js';
+import SignUp from './pages/Login/Signup';
+
+import mainImg from './assets/img/mainImg.png'
+import first from './assets/img/firstcarousel.jpg'
+import second from './assets/img/secondcarousel.jpg'
+import third from './assets/img/thirdcarousel.jpg'
+import proImg0 from './assets/img/proImg0.webp'
+import proImg1 from './assets/img/proImg1.webp'
+import proImg2 from './assets/img/proImg2.webp'
+import proImg3 from './assets/img/proImg3.webp'
+import proImg4 from './assets/img/proImg4.webp'
+import proImg5 from './assets/img/proImg5.webp'
+import proImg6 from './assets/img/proImg6.webp'
+import proImg7 from './assets/img/proImg7.webp'
+import proImg8 from './assets/img/proImg8.webp'
+import proImg9 from './assets/img/proImg9.webp'
+import proImg10 from './assets/img/proImg10.webp'
+import proImg11 from './assets/img/proImg11.webp'
+import proImg12 from './assets/img/proImg12.webp'
+import proImg13 from './assets/img/proImg13.webp'
+import proImg14 from './assets/img/proImg14.webp'
+import proImg15 from './assets/img/proImg15.webp'
 /* import proImg5 from './img/proImg5.webp' */
 
 function console(a) {
@@ -56,7 +59,6 @@ function App() {
   let [shoes, setShoes] = useState([]);
 
   useEffect(() => {
-    //sessionStorage.setItem("watch2", JSON.stringify([]))
     let storedData = JSON.parse(localStorage.getItem("watch"))
     if (!storedData) {
       localStorage.setItem("watch", JSON.stringify([]))     //최근 본 상품
@@ -83,18 +85,6 @@ function App() {
   return (
     <div className='App'>
 
-      {/* <Navbar bg="dark" data-bs-theme="dark" style={{zIndex:'2'}}>
-        <Container>
-          <Navbar.Brand href="/">ShoeShop</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/cart">Cart</Nav.Link>
-            <Nav.Link href="/about">About</Nav.Link>
-            <Nav.Link href="/event">Event</Nav.Link>
-          </Nav>
-          <Button variant="warning" onClick={handleShow}>최근 본 상품</Button>
-        </Container>
-      </Navbar> */}
-
       <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>최근 본 상품</Offcanvas.Title>
@@ -118,12 +108,13 @@ function App() {
                     <Link to="/cart" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Cart</Link>
                     <Link to="/about" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>About</Link>
                     <Link to="/event" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Event</Link>
-                    <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Loigin</Link>
 
                   </div>
                 </div>
                 <div style={{ marginRight: '30px' }}>
-                  <button class="shadow__btn" onClick={handleShow}>최근 본 상품</button>
+                  <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Loigin</Link>
+                  <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Signup</Link>
+                  <button className="shadow__btn" onClick={handleShow}>최근 본 상품</button>
                 </div>
               </div>
 
@@ -137,7 +128,6 @@ function App() {
               </div>
             </div>
 
-            {/* <div className='gradient'></div> */}
             <div className='category'>
               <div style={{ fontSize: '30px', fontWeight: 'bold', color: '#4A55A2' }}>CATEGORY</div>
               <div className='categoryCard'>
@@ -167,8 +157,18 @@ function App() {
           </>
         } />
 
-        <Route path="/detail/:id" element={<><NavMenu handleShow={handleShow} /> <Detail click={click} shoes={shoes} setShoes={setShoes} /></>} />
-        <Route path="/cart" element={<><NavMenu handleShow={handleShow} /><Cart /></>} />
+        <Route path="/detail/:id" element={
+          <>
+            <NavMenu handleShow={handleShow} />
+            <Detail click={click} shoes={shoes} setShoes={setShoes} />
+          </>
+        } />
+        <Route path="/cart" element={
+          <>
+            <NavMenu handleShow={handleShow} />
+            <Cart />
+          </>
+        } />
         <Route path="/about" element={<About navigate={navigate} />}>
           <Route path="member" element={<div>구성원</div>} />
           <Route path="location" element={<div>위치</div>} />
@@ -224,12 +224,12 @@ function NavMenu(props) {
           <Link to="/cart" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Cart</Link>
           <Link to="/about" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>About</Link>
           <Link to="/event" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Event</Link>
-          <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Loigin</Link>
         </div>
       </div>
       <div style={{ marginRight: '30px' }}>
+        <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Loigin</Link>
+        <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>SignUp</Link>
         <button class="shadow__btn" onClick={props.handleShow}>최근 본 상품</button>
-        <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>Login</Link>
       </div>
     </div >
   )
@@ -288,53 +288,6 @@ function ControlledCarousel() {
         })
       }
     </Carousel>
-  )
-}
-
-function SignUp() {
-  return (
-    <div style={{backgroundImage: 'linear-gradient(to bottom, #4A55A2, #C5DFF8)', height:'100vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
-      <div class="loginbox">
-        <form>
-          <div class="head">
-            <span>회원가입</span>
-            <p></p>
-          </div>
-          <div class="inputs">
-            <input type="text" placeholder="성함" />
-            <input type="email" placeholder="이메일 주소" />
-            <input type="password" placeholder="비밀번호" />
-          </div>
-          <button>회원가입</button>
-          <div class="form-footer">
-            <p>계정이 있으신가요? <Link to='/login'>로그인</Link></p>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-function Login() {
-  return (
-    <div style={{backgroundImage: 'linear-gradient(to bottom, #4A55A2, #C5DFF8)', height:'100vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
-      <div class="loginbox">
-        <form>
-          <div class="head">
-            <span>로그인</span>
-            <p></p>
-          </div>
-          <div class="inputs">
-            <input type="email" placeholder="이메일 주소" />
-            <input type="password" placeholder="비밀번호" />
-          </div>
-          <button>로그인</button>
-          <div class="form-footer">
-            <p>계정이 없으신가요? <Link to='/signup'>로그인</Link></p>
-          </div>
-        </form>
-      </div>
-    </div>
   )
 }
 
