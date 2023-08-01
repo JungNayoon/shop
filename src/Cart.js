@@ -43,7 +43,8 @@ function Cart() {
     }
  */
     return (
-        <>
+        <div style={{marginTop:'30px', padding: '0 60px'}}>
+            <div style={{textAlign:'start', fontSize:'30px', color:'#4A55A2', fontWeight:'bold', marginBottom:'30px'}}>장바구니</div>
             <Table striped bordered hover style={{ "vertical-align": "middle" }}>
                 <thead>
                     <tr>
@@ -60,7 +61,7 @@ function Cart() {
                             ? <div className="alert alert-warning">로딩중...</div>
                             : cart.map((a, i) =>
                                 <tr key={i}>
-                                    <td>{cart[i].cartNum}</td>
+                                    <td>{i+1}</td>
                                     <td><Link to={"/detail/" + cart[i].proId}>{cart[i].proName}</Link></td>
                                     <td>{cart[i].count}</td>
                                     <td>
@@ -75,6 +76,7 @@ function Cart() {
                                             .then((res) => {
                                                 alert("삭제 완료")
                                                 console.log(res)
+                                                window.location.reload()
                                             })
                                             .catch((err) => {
                                                 console.log(err)
@@ -101,7 +103,7 @@ function Cart() {
 
                 </tbody>
             </Table >
-        </>
+        </div>
     )
 }
 

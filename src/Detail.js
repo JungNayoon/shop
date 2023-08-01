@@ -6,6 +6,13 @@ import './App.css'
 import { addItem } from "./store.js";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
+import './Detail.css'
+
+import proImg from './img/proImg0.webp'
+import thumbnail1 from './img/thumbnail1.webp'
+import thumbnail2 from './img/thumbnail2.webp'
+import thumbnail3 from './img/thumbnail3.webp'
+import thumbnail4 from './img/thumbnail4.webp'
 
 function Detail(props) {
     let { id } = useParams();
@@ -15,14 +22,24 @@ function Detail(props) {
     let [shoes, setShoes] = useState([]);
 
     /*2초 할인 타이머 만들기 */
+    let [sec, setSec] = useState(parseInt(10));
     let [show, setShow] = useState(true);
     // useEffect 만들기 (요즘 방식)
     useEffect(() => {
         //mount, undate 될 때 실행될 코드
-        let timer = setTimeout(() => {
+        /* let timer = setTimeout(() => {
             setShow(false);
-        }, 2000);   // 2초 후에 show = false
-
+        }, 10000);   // 10초 후에 show = false */
+        let countdown = setInterval(() => {
+            if (parseInt(sec) > 0) {
+                setSec(parseInt(sec) - 1);
+            }
+            if (parseInt(sec) === 0) {
+                clearInterval(countdown);
+                setShow(false);
+            }
+        }, 1000);
+        return () => clearInterval(countdown);
         /*최근 본 상품 등록 */
         let addWatch = JSON.parse(localStorage.getItem('watch'))
         addWatch.push(props.shoes[id].proName)
@@ -40,7 +57,7 @@ function Detail(props) {
             }
         }
         getProduct();
-    }, [])
+    }, [sec])
 
     /*input 태그에 숫자만 넣기 */
     let [word, setWord] = useState(false);
@@ -78,80 +95,59 @@ function Detail(props) {
             alert('수량을 입력하세요!')
         } else {
             axios.post('http://localhost:4000/api/cart/insert', {
-                proId : cartData.proId,
-                proName : cartData.proName,
-                count : cartData.count
+                proId: cartData.proId,
+                proName: cartData.proName,
+                count: cartData.count
             })
-            .then((res) => {
-                console.log(res)
-                alert('장바구니 추가 완료!')
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+                .then((res) => {
+                    console.log(res)
+                    alert('장바구니 추가 완료!')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
     }
 
     return (
-        <div className={"container start " + fade2} style={{ padding: '70px 0' }}>
-
-            {
-                show === true
-                    ? <div className="alert alert-warning">
-                        2초 이내 구매시 할인<br />
-                        <button>할인받기</button>
-                    </div>
-                    : null
-            }
+        <div className={"container start " + fade2} style={{ padding: '60px 0' }}>
 
             <div className="row">
-                <div className="col-md-6">
-                    <img src={"https://codingapple1.github.io/shop/shoes" + j + ".jpg"} width="100%" />
+                <div className="col-md-6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div className="thumbnail" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginRight: '10px' }}>
+                        <div><img src={thumbnail1} /></div>
+                        <div><img src={thumbnail2} /></div>
+                        <div><img src={thumbnail3} /></div>
+                        <div><img src={thumbnail4} /></div>
+                    </div>
+                    <img src={proImg} width="70%" />
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-6" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                     <h4 className="pt-5">{props.shoes[id].proName}</h4>  {/* 현재 url에 입력한 숫자 */}
                     <p>{props.shoes[id].proDetail}</p>
-                    <p>{props.shoes[id].proPrice}</p>
-                    <input type="number" min={1} name="count" onChange={getData} />
-                    {/*                     <button className="btn btn-danger" onClick={() => {
-                        dispatch(addItem({ proId: props.shoes[id].proId, proName: props.shoes[id].proName, count: 1 }))
-                    }}>주문하기</button>
-                    <button className="btn btn-danger" onClick={() => {
-                        console.log(s.stock2)
-                    }}>장바구니에 들어갔는지 콘솔 확인</button>
-                    <Link to={"/cart"}>장바구니</Link> */}
+                    <p>{props.shoes[id].proPrice} 원</p>
+                    <input type="number" min={1} name="count" onChange={getData} placeholder="수량을 입력하세요" style={{ padding: '12px', border: 'none', borderRadius: '4px', boxShadow: '2px 2px 7px 0 rgb(0, 0, 0, 0.2)', outline: 'none', color: 'dimgray' }} />
+                    <div><button className="cartbtn" onClick={addCart} style={{ marginTop: '30px' }}>장바구니에 넣기</button></div>
 
-                    <button className="btn btn-danger" onClick={()=>{
-                        console.log(cartData)
-                    }}>장바구니데이터 확인</button>
-                    <button className="btn btn-danger" onClick={addCart}>장바구니에 넣기</button>
-                </div>
-
-                {/* input 태그에 숫자만 넣기 */}
-                <div className="alert alert-warning">
                     {
-                        word === true
-                            ? <div className="alert alert-danger">경고 : 숫자만 입력하세요</div>
+                        show === true
+                            ? <div className="alert alert-warning" style={{width:'200px', marginTop:'10px'}}>
+                                깜짝 20% 할인 쿠폰<br />
+                                {sec}초<br />
+                                <button onClick={() => { alert('쿠폰 받기 완료!') }} style={{borderColor:'#ffe69c'}}>쿠폰 받기</button>
+                            </div>
                             : null
                     }
-                    <input type="text" onChange={(e) => {
-                        console.log(e.target.value);    //숫자 1입력
-                        let a = e.target.value;         //a=1
-                        isNaN(a);   // isNaN: 숫자가 아닌가? -> false
-                        setWord(isNaN(a)); // Num을 false로 바꾼다
-                    }} />
                 </div>
 
-                <Nav variant="tabs" defaultActiveKey="/link-1">
+
+                <Nav variant="tabs" defaultActiveKey="/link-1" style={{ marginTop: '50px' }}>
                     <Nav.Item>
-                        <Nav.Link eventKey="link-1" onClick={() => { setTab(0) }}><div>상세설명</div></Nav.Link>
+                        <Nav.Link eventKey="/link-1" onClick={() => { setTab(0) }}>상품평</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="link-2" onClick={() => { setTab(1) }}>상품평</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="link-3" onClick={() => { setTab(2) }}>상품문의</Nav.Link>
+                        <Nav.Link eventKey="/link-2" onClick={() => { setTab(1) }}>상품문의</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 <TabContent tab={tab} shoes={props.shoes} id={id} />
@@ -175,9 +171,22 @@ function TabContent({ tab, shoes, id }) {
 
     return (
         <div className={'start ' + fade}>
-            {[<><div>{shoes[id].title}</div> <div>{shoes[id].content}</div> <div>{shoes[id].price}</div></>
-                , <div>내용2</div>
-                , <div>내용3</div>][tab]}
+            {[
+                <div className="form">
+                    <div className="title">상품평 작성</div>
+                    <input type="text" placeholder="닉네임" className="input" />
+                    <textarea placeholder="상품평을 작성해주세요"></textarea>
+
+                    <button>작성완료</button>
+                </div>
+                , <div className="form">
+                    <div className="title">상품문의 작성</div>
+                    <input type="text" placeholder="닉네임" className="input" />
+                    <textarea placeholder="문의 내용을 작성해주세요"></textarea>
+
+                    <button>작성완료</button>
+                </div>
+            ][tab]}
         </div>
     )
 }
