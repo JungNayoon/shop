@@ -1,4 +1,13 @@
 /*로그인 페이지*/
+.background {
+    background-image: linear-gradient(rgb(74, 85, 162), rgb(197, 223, 248));
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .loginbox {
     max-width: 300px;
     border-radius: 15px;

@@ -27,9 +27,6 @@ function Detail(props) {
     // useEffect 만들기 (요즘 방식)
     useEffect(() => {
         //mount, undate 될 때 실행될 코드
-        /* let timer = setTimeout(() => {
-            setShow(false);
-        }, 10000);   // 10초 후에 show = false */
         let countdown = setInterval(() => {
             if (parseInt(sec) > 0) {
                 setSec(parseInt(sec) - 1);
@@ -39,9 +36,9 @@ function Detail(props) {
                 setShow(false);
             }
         }, 1000);
-        return () => clearInterval(countdown);
         /*최근 본 상품 등록 */
         let addWatch = JSON.parse(localStorage.getItem('watch'))
+        /* let addWatch = JSON.parse(localStorage.getItem('watch')) */
         addWatch.push(props.shoes[id].proName)
         addWatch = new Set(addWatch)    //array에서 중복 제거
         addWatch = Array.from(addWatch) //중복 제거한 것을 다시 Array형태로 바꿈
@@ -57,6 +54,7 @@ function Detail(props) {
             }
         }
         getProduct();
+        return () => clearInterval(countdown);
     }, [sec])
 
     /*input 태그에 숫자만 넣기 */
@@ -132,10 +130,13 @@ function Detail(props) {
 
                     {
                         show === true
-                            ? <div className="alert alert-warning" style={{width:'200px', marginTop:'10px'}}>
+                            ? <div className="alert alert-warning" style={{ width: '200px', marginTop: '10px' }}>
                                 깜짝 20% 할인 쿠폰<br />
                                 {sec}초<br />
-                                <button onClick={() => { alert('쿠폰 받기 완료!') }} style={{borderColor:'#ffe69c'}}>쿠폰 받기</button>
+                                <button onClick={() => {
+                                    alert('쿠폰 받기 완료!');
+                                    setShow(false);
+                                }} style={{ borderColor: '#ffe69c' }}>쿠폰 받기</button>
                             </div>
                             : null
                     }

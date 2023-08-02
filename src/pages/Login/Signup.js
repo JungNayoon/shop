@@ -3,7 +3,10 @@ import './Login.css'
 
 function SignUp() {
     return (
-        <div style={{ backgroundImage: 'linear-gradient(to bottom, #4A55A2, #C5DFF8)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className='background'>
+            <div style={{ display: 'flex', alignItems: 'center', height: '100px' }}>
+                <Link to='/' style={{ color: 'white', fontSize: '30px', textDecoration: 'none' }}>ShoeShop</Link>
+            </div>
             <div class="loginbox">
                 <form>
                     <div class="head">

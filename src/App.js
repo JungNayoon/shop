@@ -1,17 +1,22 @@
 /* eslint-disable */
 import './App.css';
-import { Container, Nav, Navbar, Row, Col, Button, Carousel, Offcanvas } from 'react-bootstrap';
+import { Container, Nav, Navbar, Row, Col, Button, Carousel, Offcanvas, NavDropdown } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import { Question, Bell, Stars } from 'react-bootstrap-icons'
 /*Routes : 
 * Route : 페이지  <Route path="/detail" element={<div></div>}/>
 * Link : 페이지 이동 <Link to="/detail">상세페이지</Link> 
 */
+import NavMenu from './components/NavMenu';
 import Detail from './pages/Detail/Detail.js';
 import Cart from './pages/Cart/Cart.js';
 import Login from './pages/Login/Login.js';
-import SignUp from './pages/Login/Signup';
+import SignUp from './pages/Login/Signup.js';
+import Notice from './pages/About/Notice/Notice';
+import Ask from './pages/About/Ask/Ask.js';
+import Event from './pages/About/Event/Event';
 
 import mainImg from './assets/img/mainImg.png'
 import first from './assets/img/firstcarousel.jpg'
@@ -105,13 +110,17 @@ function App() {
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '50px' }}>
-                    <Link to="/cart" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Cart</Link>
-                    <Link to="/about" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>About</Link>
-                    <Link to="/event" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Event</Link>
+                    <Link to="" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Category</Link>
+                    <NavDropdown title='About' style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>
+                      <NavDropdown.Item href="/about/notice">공지사항</NavDropdown.Item>
+                      <NavDropdown.Item href="/about/ask">1:1 상담</NavDropdown.Item>
+                      <NavDropdown.Item href="/about/event">이벤트</NavDropdown.Item>
+                    </NavDropdown>
 
                   </div>
                 </div>
                 <div style={{ marginRight: '30px' }}>
+                  <Link to="/cart" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Cart</Link>
                   <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Loigin</Link>
                   <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Signup</Link>
                   <button className="shadow__btn" onClick={handleShow}>최근 본 상품</button>
@@ -169,10 +178,17 @@ function App() {
             <Cart />
           </>
         } />
-        <Route path="/about" element={<About navigate={navigate} />}>
-          <Route path="member" element={<div>구성원</div>} />
-          <Route path="location" element={<div>위치</div>} />
+        <Route path="/about" element={
+          <>
+            <NavMenu handleShow={handleShow} />
+            <About navigate={navigate} />
+          </>
+        }>
+          <Route path="notice" element={<Notice />} />
+          <Route path="ask" element={<Ask />} />
+          <Route path="event" element={<Event />} />
         </Route>
+
         <Route path="/event" element={<Event navigate={navigate} />}>
           <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
           <Route path="two" element={<div>생일 기념 쿠폰 받기</div>} />
@@ -212,49 +228,16 @@ function Card(props) {
     </>
   )
 }
-function NavMenu(props) {
-  return (
-    <div className='navmenu'>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ display: 'flex', marginLeft: '30px' }}>
-          <Link to='/' style={{ color: 'white', fontSize: '30px', textDecoration: 'none' }}>ShoeShop</Link>
-        </div>
 
-        <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '50px' }}>
-          <Link to="/cart" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Cart</Link>
-          <Link to="/about" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>About</Link>
-          <Link to="/event" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Event</Link>
-        </div>
-      </div>
-      <div style={{ marginRight: '30px' }}>
-        <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Loigin</Link>
-        <Link to="/login" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>SignUp</Link>
-        <button class="shadow__btn" onClick={props.handleShow}>최근 본 상품</button>
-      </div>
-    </div >
-  )
-}
 
 function About(props) {
   return (
-    <div>
-      <h4>회사정보</h4>
+    <div style={{ marginTop: '30px', padding: '0 60px' }}>
+      <div style={{ textAlign: 'center', fontSize: '30px', color: '#4A55A2', fontWeight: 'bold', marginBottom: '30px' }}>고객센터</div>
       <Col>
-        <Button variant="dark" onClick={() => { props.navigate('/about/member') }}>member</Button>
-        <Button variant="dark" onClick={() => { props.navigate('/about/location') }}>Location</Button>
-      </Col>
-      <Outlet></Outlet>
-    </div>
-  )
-}
-
-function Event(props) {
-  return (
-    <div>
-      <h4>오늘의 이벤트</h4>
-      <Col>
-        <Button variant="dark" onClick={() => { props.navigate('/event/one') }}>one</Button>
-        <Button variant="dark" onClick={() => { props.navigate('/event/two') }}>two</Button>
+        <Button className='navBtn' onClick={() => { props.navigate('/about/notice') }}><Bell /><div>공지사항</div></Button>
+        <Button className='navBtn' onClick={() => { props.navigate('/about/ask') }}><Question /><div>1:1 상담</div></Button>
+        <Button className='navBtn' onClick={() => { props.navigate('/about/event') }}><Stars /><div>이벤트</div></Button>
       </Col>
       <Outlet></Outlet>
     </div>
