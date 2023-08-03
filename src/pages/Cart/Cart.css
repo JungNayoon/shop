@@ -1,0 +1,28 @@
+.orderInfo {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    border: 1px solid #4a55a2;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: start;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.orderInfo ul {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: gray;
+}
+
+.orderInfo button {
+    width: 100%;
+    border: none;
+    background: #4a55a2;
+    color: white;
+    height: 40px;
+    border-radius: 10px;
+}

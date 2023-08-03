@@ -173,22 +173,3 @@
     0 0 100px rgb(0, 140, 255);
 }
 
-/*고객센터*/
-.navBtn {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: transparent;
-  color: #4A55A2;
-  border: 1px solid #4A55A2;
-  margin: 30px 10px;
-}
-.navBtn:hover{
-  background: #4A55A2;
-}
-.navBtn:focus-visible{
-  background: #4A55A2;
-}
-.navBtn:first-child:active{
-  background: #4A55A2;
-}
