@@ -1,3 +1,34 @@
+.proNameLink{
+    text-decoration: none;
+    color: black;
+}
+.proNameLink:hover{
+    font-weight: bold;
+    color: #4a55a2;
+}
+
+.countBtn {
+    border: none;
+    border-radius: 5px;
+    background: #4a55a2;
+    color: white;
+    margin: 0 5px;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+}
+
+.deleteBtn {
+    border: none;
+    border-radius: 5px;
+    background: #4a55a2;
+    color: white;
+    /* margin: 0 5px; */
+    padding: 0;
+    width: 50px;
+    height: 35px;
+}
+
 .orderInfo {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     background: #fff;
@@ -16,6 +47,10 @@
     padding: 0;
     font-size: 14px;
     color: gray;
+}
+
+.listData {
+    float: right;
 }
 
 .orderInfo button {
