@@ -35,7 +35,7 @@ function Cart() {
         }
         totalPrice();
         getCart();
-    }, []);
+    }, [cart]);
 
     /* 수량 변경하기 */
     let decrease = async (proId) => {

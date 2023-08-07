@@ -10,7 +10,7 @@ function NavMenu(props) {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '50px' }}>
-                        <Link to="/category" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Category</Link>
+                        {/* <Link to="/category" style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>Category</Link> */}
                         <NavDropdown title='About' style={{ color: 'white', textDecoration: 'none', margin: '0 30px' }}>
                             <NavDropdown.Item href="/about/notice">공지사항</NavDropdown.Item>
                             <NavDropdown.Item href="/about/ask">1:1 상담</NavDropdown.Item>

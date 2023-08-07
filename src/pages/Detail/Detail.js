@@ -111,15 +111,8 @@ function Detail(props) {
         <div className={"container start " + fade2} style={{ padding: '60px 0' }}>
 
             <div className="row">
-                <div className="col-md-6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <div className="thumbnail" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginRight: '10px' }}>
-                        <div><img src={require('../../assets/img/proImg' + id +'.webp')} /></div>
-                        <div><img src={require('../../assets/img/proImg' + id +'.webp')} /></div>
-                        <div><img src={require('../../assets/img/proImg' + id +'.webp')} /></div>
-                        <div><img src={require('../../assets/img/proImg' + id +'.webp')} /></div>
-                    </div>
+                <div className="col-md-6" style={{ display: 'flex', justifyContent: 'center' }}>
                     <img src={require('../../assets/img/proImg' + id +'.webp')} width={'70%'} />
-                    {/* <img src={proImg} width="70%" /> */}
                 </div>
 
                 <div className="col-md-6" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>

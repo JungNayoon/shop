@@ -4,7 +4,6 @@
 
 .main-bg {
   height: 300px;
-  /* background-image: url(./img/shoes1.jpg); */
   background-size: cover;
   background-position: center;
 }
@@ -25,14 +24,6 @@
   justify-content: space-between;
 }
 
-/* .gradient {
-  z-index: 1;
-  background-image: linear-gradient(to bottom, #4A55A2, #C5DFF8);
-  height: 600px;
-  position: relative;
-  top: -600px;
-} */
-
 .mainItem {
   position: relative;
   display: flex;
@@ -41,33 +32,21 @@
   justify-content: space-evenly;
 }
 
-/*카테고리*/
-.category {
-  display: flex;
-  justify-content: space-evenly;
-  padding: 30px 0;
-  flex-direction: column;
+.proName {
+  list-style: none;
+  cursor: pointer;
+  margin-bottom: 15px;
 }
 
-.categoryCard {
-  padding-top: 30px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+.proName:hover {
+  color: #4A55A2;
+  font-weight: bold;
 }
 
-.card {
-  width: 190px;
-  height: 254px;
-  background: white;
-  border-radius: 10px;
-  transition: border-radius 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.shadow {
-  box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1),
-    0 0 0 2px rgb(190, 190, 190),
-    0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+/*캐러셀*/
+.carouselBox {
+  padding: 0 100px;
+  background: #C5DFF8;
 }
 
 /*상품 카드*/
@@ -172,4 +151,3 @@
     0 0 50px rgb(0, 140, 255),
     0 0 100px rgb(0, 140, 255);
 }
-
