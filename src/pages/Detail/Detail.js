@@ -8,12 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import './Detail.css'
 
-import proImg from '../../assets/img/proImg0.webp'
-import thumbnail1 from '../../assets/img/thumbnail1.webp'
-import thumbnail2 from '../../assets/img/thumbnail2.webp'
-import thumbnail3 from '../../assets/img/thumbnail3.webp'
-import thumbnail4 from '../../assets/img/thumbnail4.webp'
-
 function Detail(props) {
     let { id } = useParams();
     let j = parseFloat(id) + 1;
@@ -36,14 +30,13 @@ function Detail(props) {
                 setShow(false);
             }
         }, 1000);
+
         /*최근 본 상품 등록 */
         let addWatch = JSON.parse(localStorage.getItem('watch'))
-        /* let addWatch = JSON.parse(localStorage.getItem('watch')) */
         addWatch.push(props.shoes[id].proName)
         addWatch = new Set(addWatch)    //array에서 중복 제거
         addWatch = Array.from(addWatch) //중복 제거한 것을 다시 Array형태로 바꿈
         localStorage.setItem('watch', JSON.stringify(addWatch))
-        //localStorage.setItem(props.shoes[id].title)
 
         async function getProduct() {
             try {
@@ -54,11 +47,9 @@ function Detail(props) {
             }
         }
         getProduct();
+
         return () => clearInterval(countdown);
     }, [sec])
-
-    /*input 태그에 숫자만 넣기 */
-    let [word, setWord] = useState(false);
 
     /*탭 UI */
     let [tab, setTab] = useState(1);
@@ -107,12 +98,89 @@ function Detail(props) {
         }
     }
 
+    /*상품 문의 작성 */
+    let [qnaData, setQnaData] = useState({
+        proId: id,
+        qnaCategory: '',
+        qnaContents: '',
+        qnaWriter: ''
+    })
+    let getQnaData = (e) => {
+        setQnaData({
+            ...qnaData,
+            [e.target.name]: e.target.value
+        })
+    }
+    let addQna = () => {
+        if (qnaData.qnaCategory === '') {
+            alert('문의 유형을 선택하세요.')
+        } else if (qnaData.qnaWriter === '') {
+            alert('작성자를 입력하세요.')
+        } else if (qnaData.qnaContents === '') {
+            alert('문의 내용을 입력하세요.')
+        } else {
+            axios.post('http://localhost:4000/api/qna/insert', {
+                proId: qnaData.proId,
+                qnaCategory: qnaData.qnaCategory,
+                qnaContents: qnaData.qnaContents,
+                qnaWriter: qnaData.qnaWriter
+            })
+                .then((res) => {
+                    console.log(res);
+                    console.log('상품 문의 등록 완료!');
+                    console.log(qnaList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    console.log('상품 문의 등록 실패');
+                })
+        }
+    }
+
+    /*상품 문의 리스트 가져오기 */
+    let [qnaList, setQnaList] = useState([]);
+    let [filterList, setFilterList] = useState([]);
+    async function getQnaList() {
+        try {
+            let res = await axios.get('http://localhost:4000/api/qna/get');
+            let getList = res.data;
+            //let getproId = getList.map(list => list.proId);
+            console.log(res.data);
+            console.log('==================');
+
+            //db에서 가져온 데이터들의 proId 중에 해당 상품의 id와 같은 데이터들을 필터링하여 새 배열로 반환.
+            //console.log(getList.map(list => list.proId === 0));
+            //console.log(id);
+            //console.log(filterList);
+
+            /* getList.map((list) => {
+                if (list.proId === shoes[id].proId) {
+                    console.log(list);  //{proId: 0, qnaId: 1, qnaCategory: '배송', qnaContents: '222', qnaWriter: '22', …}
+                    filterList.push(list);
+                    console.log(filterList);
+                }
+            }) */
+
+            let filteredList = getList.filter((list) => list.proId === shoes[id].proId);
+            setFilterList(filteredList);
+            console.log(filterList);
+
+        } catch (error) {
+            console.log('상품 문의 리스트를 가져오기 실패');
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getQnaList();
+    })
+
     return (
         <div className={"container start " + fade2} style={{ padding: '60px 0' }}>
 
             <div className="row">
                 <div className="col-md-6" style={{ display: 'flex', justifyContent: 'center' }}>
-                    <img src={require('../../assets/img/proImg' + id +'.webp')} width={'70%'} />
+                    <img src={require('../../assets/img/proImg' + id + '.webp')} width={'70%'} />
                 </div>
 
                 <div className="col-md-6" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
@@ -136,7 +204,6 @@ function Detail(props) {
                     }
                 </div>
 
-
                 <Nav variant="tabs" defaultActiveKey="/link-1" style={{ marginTop: '50px' }}>
                     <Nav.Item>
                         <Nav.Link eventKey="/link-1" onClick={() => { setTab(0) }}>상품평</Nav.Link>
@@ -145,7 +212,7 @@ function Detail(props) {
                         <Nav.Link eventKey="/link-2" onClick={() => { setTab(1) }}>상품문의</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                <TabContent tab={tab} shoes={props.shoes} id={id} />
+                <TabContent tab={tab} shoes={props.shoes} id={id} getQnaData={getQnaData} addQna={addQna} qnaList={qnaList} getQnaList={getQnaList} filterList={filterList} />
 
             </div>
         </div>
@@ -153,7 +220,7 @@ function Detail(props) {
 }
 
 
-function TabContent({ tab, shoes, id }) {
+function TabContent({ tab, shoes, id, getQnaData, addQna, qnaList, getQnaList, filterList }) {
 
     let [fade, setFade] = useState('')
 
@@ -167,20 +234,81 @@ function TabContent({ tab, shoes, id }) {
     return (
         <div className={'start ' + fade}>
             {[
-                <div className="form">
-                    <div className="title">상품평 작성</div>
-                    <input type="text" placeholder="닉네임" className="input" />
-                    <textarea placeholder="상품평을 작성해주세요"></textarea>
+                <>
+                    <div className="form">
+                        <div className="title">상품평 작성</div>
+                        <input type="text" placeholder="닉네임" className="input" />
+                        <textarea placeholder="상품평을 작성해주세요"></textarea>
 
-                    <button>작성완료</button>
-                </div>
-                , <div className="form">
-                    <div className="title">상품문의 작성</div>
-                    <input type="text" placeholder="닉네임" className="input" />
-                    <textarea placeholder="문의 내용을 작성해주세요"></textarea>
+                        <button>작성완료</button>
+                    </div>
+                    <div className="reviewList">
+                        <ul>
+                            <li>
+                                <div style={{ marginBottom: '30px' }}><span style={{ marginRight: '30px' }}>작성자</span><span>작성일</span></div>
+                                <div><span>내용</span></div>
+                            </li>
+                            <li>
+                                <div style={{ marginBottom: '30px' }}><span style={{ marginRight: '30px' }}>작성자</span><span>작성일</span></div>
+                                <div><span>내용</span></div>
+                            </li>
+                            <li>
+                                <div style={{ marginBottom: '30px' }}><span style={{ marginRight: '30px' }}>작성자</span><span>작성일</span></div>
+                                <div><span>내용</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </>
 
-                    <button>작성완료</button>
-                </div>
+
+                ,
+                <>
+                    <div className="form">
+                        <div className="title">상품문의 작성</div>
+                        <div className="formContents">
+                            <div>
+                                <select name='qnaCategory' onChange={getQnaData}>
+                                    <option disabled selected>문의유형</option>
+                                    <option value='배송'>배송</option>
+                                    <option value='상품'>상품</option>
+                                    <option value='반품/취소'>반품/취소</option>
+                                    <option value='기타'>기타</option>
+                                </select>
+                                <input type="text" placeholder="작성자" className="input" name='qnaWriter' onChange={getQnaData} />
+                            </div>
+                            <textarea placeholder="문의 내용을 작성해주세요" name='qnaContents' onChange={getQnaData}></textarea>
+                        </div>
+
+                        <button style={{ background: '#4A55A2' }} onClick={addQna}>작성완료</button>
+                    </div>
+                    <div className="reviewList">
+                        <table style={{ width: '100%' }}>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '10%' }}>문의유형</th>
+                                    <th style={{ width: '50%' }}>문의내용</th>
+                                    <th style={{ width: '20%' }}>작성자</th>
+                                    <th style={{ width: '20%' }}>작성일</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+
+                                    filterList.map((a, i) => {
+                                        return (
+                                            <tr key={i}>
+                                                <td>{filterList[i].qnaCategory}</td>
+                                                <td>{filterList[i].qnaContents}</td>
+                                                <td>{filterList[i].qnaWriter}</td>
+                                                <td>{filterList[i].qnaDate}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </>
             ][tab]}
         </div>
     )
