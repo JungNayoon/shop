@@ -75,7 +75,7 @@ function Cart() {
 
 
     return (
-        <div style={{ marginTop: '30px', padding: '0 60px' }}>
+        <div style={{ marginTop: '30px', padding: '0 60px', height:'100vh'}}>
             <div style={{ textAlign: 'start', fontSize: '30px', color: '#4A55A2', fontWeight: 'bold', marginBottom: '30px' }}>장바구니</div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flexGrow: '2', marginRight: '15px' }}>

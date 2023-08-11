@@ -39,16 +39,19 @@
     align-items: center;
     justify-content: center;
 }
+
 .formContents {
     width: 100%;
     display: flex;
     flex-direction: column;
     margin: 30px 0;
 }
-.formContents div{
+
+.formContents div {
     display: flex;
     margin-bottom: 15px;
 }
+
 .formContents select {
     width: 30%;
     border: 1px solid rgb(219, 213, 213);
@@ -88,32 +91,29 @@
     cursor: pointer;
 }
 
-/*상품평 목록*/
-.reviewList{
-    margin: 30px;
+/*상품평 리스트*/
+.reviewList {
+    box-shadow: 0px 10px 15px 0px #E0E0E0;
 }
 
-.reviewList thead{
-    border-top: 1px solid rgb(219, 213, 213);
-    border-bottom: 1px solid rgb(219, 213, 213);
+.reviewList thead {
     background: #eeeeee;
 }
-.reviewList th{
-    width: 10px;
-    padding: 5px;
+
+.reviewList th {
+    padding: 20px 10px;
 }
-.reviewList tbody td{
+
+.reviewList tbody td {
     border-bottom: 1px solid rgb(219, 213, 213);
     padding: 10px 0;
 }
-
 
 .reviewList ul {
     list-style: none;
     text-align: start;
     margin: 30px 30px;
     padding: 0;
-    border-top: 1px solid rgb(219, 213, 213);
 }
 
 .reviewList li {
@@ -121,3 +121,5 @@
     border-collapse: collapse;
     padding: 10px;
 }
+
+/**/

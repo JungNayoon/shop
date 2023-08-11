@@ -15,7 +15,7 @@ function Detail(props) {
     //db에서 상품 데이터 가져오기
     let [shoes, setShoes] = useState([]);
 
-    /*2초 할인 타이머 만들기 */
+    /*10초 할인 타이머 만들기 */
     let [sec, setSec] = useState(parseInt(10));
     let [show, setShow] = useState(true);
     // useEffect 만들기 (요즘 방식)
@@ -47,12 +47,14 @@ function Detail(props) {
             }
         }
         getProduct();
+        getQnaList();
+        getReviewList();
 
         return () => clearInterval(countdown);
     }, [sec])
 
     /*탭 UI */
-    let [tab, setTab] = useState(1);
+    let [tab, setTab] = useState(0);
 
     /*페이지로딩 애니메이션 */
     let [fade2, setFade2] = useState('')
@@ -83,7 +85,7 @@ function Detail(props) {
         if (cartData.count === '') {
             alert('수량을 입력하세요!')
         } else {
-            axios.post('http://localhost:4000/api/cart/insert', {
+            axios.post('http://localhost:4000/api/cart/post', {
                 proId: cartData.proId,
                 proName: cartData.proName,
                 count: cartData.count
@@ -119,7 +121,7 @@ function Detail(props) {
         } else if (qnaData.qnaContents === '') {
             alert('문의 내용을 입력하세요.')
         } else {
-            axios.post('http://localhost:4000/api/qna/insert', {
+            axios.post('http://localhost:4000/api/qna/post', {
                 proId: qnaData.proId,
                 qnaCategory: qnaData.qnaCategory,
                 qnaContents: qnaData.qnaContents,
@@ -127,43 +129,25 @@ function Detail(props) {
             })
                 .then((res) => {
                     console.log(res);
-                    console.log('상품 문의 등록 완료!');
-                    console.log(qnaList);
+                    alert('상품 문의 등록 완료!');
+                    getQnaList();
                 })
                 .catch((err) => {
                     console.log(err);
-                    console.log('상품 문의 등록 실패');
+                    alert('상품 문의 등록 실패');
                 })
         }
     }
 
     /*상품 문의 리스트 가져오기 */
-    let [qnaList, setQnaList] = useState([]);
     let [filterList, setFilterList] = useState([]);
     async function getQnaList() {
         try {
             let res = await axios.get('http://localhost:4000/api/qna/get');
             let getList = res.data;
-            //let getproId = getList.map(list => list.proId);
-            console.log(res.data);
-            console.log('==================');
-
-            //db에서 가져온 데이터들의 proId 중에 해당 상품의 id와 같은 데이터들을 필터링하여 새 배열로 반환.
-            //console.log(getList.map(list => list.proId === 0));
-            //console.log(id);
-            //console.log(filterList);
-
-            /* getList.map((list) => {
-                if (list.proId === shoes[id].proId) {
-                    console.log(list);  //{proId: 0, qnaId: 1, qnaCategory: '배송', qnaContents: '222', qnaWriter: '22', …}
-                    filterList.push(list);
-                    console.log(filterList);
-                }
-            }) */
 
             let filteredList = getList.filter((list) => list.proId === shoes[id].proId);
             setFilterList(filteredList);
-            console.log(filterList);
 
         } catch (error) {
             console.log('상품 문의 리스트를 가져오기 실패');
@@ -171,9 +155,60 @@ function Detail(props) {
         }
     }
 
-    useEffect(() => {
-        getQnaList();
-    })
+    /*상품평 작성*/
+    let [reviewData, setReviewData] = useState({
+        proId: id,
+        reviewContents: '',
+        reviewWriter: ''
+    });
+
+    let getReviewData = (e) => {
+        setReviewData({
+            ...reviewData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    let addReview = () => {
+        if (reviewData.reviewContents == null) {
+            alert('상품평 내용을 입력하세요.')
+        } else if (reviewData.reviewWriter == null) {
+            alert('상품평 작성자를 입력하세요.')
+        } else {
+            axios.post('http://localhost:4000/api/review/post', {
+                proId: reviewData.proId,
+                reviewContents: reviewData.reviewContents,
+                reviewWriter: reviewData.reviewWriter
+            })
+                .then((res) => {
+                    alert('상품평 등록 완료');
+                    console.log(res);
+                })
+                .catch((error) => {
+                    alert('상품평 등록 실패');
+                    console.log(error);
+                })
+        }
+    }
+
+    /*상품평 출력 */
+    let [reviewFilterList, setReviewFilterList] = useState([]);
+    async function getReviewList() {
+
+        try {
+            let res = await axios.get('http://localhost:4000/api/review/get');
+            let getList = res.data;
+
+            let reviewfilteredList = getList.filter((list) => list.proId === shoes[id].proId);
+            setReviewFilterList(reviewfilteredList);
+            console.log(reviewFilterList);
+
+        } catch (error) {
+            console.log('상품평 가져오기 실패');
+            console.log(error);
+        }
+    }
+
 
     return (
         <div className={"container start " + fade2} style={{ padding: '60px 0' }}>
@@ -204,15 +239,15 @@ function Detail(props) {
                     }
                 </div>
 
-                <Nav variant="tabs" defaultActiveKey="/link-1" style={{ marginTop: '50px' }}>
+                <Nav variant="tabs" defaultActiveKey="link-1" style={{ marginTop: '50px' }}>
                     <Nav.Item>
-                        <Nav.Link eventKey="/link-1" onClick={() => { setTab(0) }}>상품평</Nav.Link>
+                        <Nav.Link eventKey="link-1" onClick={() => { setTab(0) }}>상품평</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="/link-2" onClick={() => { setTab(1) }}>상품문의</Nav.Link>
+                        <Nav.Link eventKey="link-2" onClick={() => { setTab(1) }}>상품문의</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                <TabContent tab={tab} shoes={props.shoes} id={id} getQnaData={getQnaData} addQna={addQna} qnaList={qnaList} getQnaList={getQnaList} filterList={filterList} />
+                <TabContent tab={tab} shoes={props.shoes} id={id} getQnaData={getQnaData} addQna={addQna} filterList={filterList} getReviewData={getReviewData} addReview={addReview} reviewFilterList={reviewFilterList} />
 
             </div>
         </div>
@@ -220,7 +255,7 @@ function Detail(props) {
 }
 
 
-function TabContent({ tab, shoes, id, getQnaData, addQna, qnaList, getQnaList, filterList }) {
+function TabContent({ tab, shoes, id, getQnaData, addQna, filterList, getReviewData, addReview, reviewFilterList }) {
 
     let [fade, setFade] = useState('')
 
@@ -237,25 +272,28 @@ function TabContent({ tab, shoes, id, getQnaData, addQna, qnaList, getQnaList, f
                 <>
                     <div className="form">
                         <div className="title">상품평 작성</div>
-                        <input type="text" placeholder="닉네임" className="input" />
-                        <textarea placeholder="상품평을 작성해주세요"></textarea>
+                        <div className="formContents">
+                            <input type="text" placeholder="작성자" className="input" name="reviewWriter" onChange={getReviewData} style={{marginBottom: '15px'}}/>
+                            <textarea placeholder="상품평을 작성해주세요" name="reviewContents" onChange={getReviewData}></textarea>
+                        </div>
 
-                        <button>작성완료</button>
+                        <button style={{ background: '#4A55A2' }} onClick={addReview}>작성완료</button>
                     </div>
                     <div className="reviewList">
                         <ul>
-                            <li>
-                                <div style={{ marginBottom: '30px' }}><span style={{ marginRight: '30px' }}>작성자</span><span>작성일</span></div>
-                                <div><span>내용</span></div>
-                            </li>
-                            <li>
-                                <div style={{ marginBottom: '30px' }}><span style={{ marginRight: '30px' }}>작성자</span><span>작성일</span></div>
-                                <div><span>내용</span></div>
-                            </li>
-                            <li>
-                                <div style={{ marginBottom: '30px' }}><span style={{ marginRight: '30px' }}>작성자</span><span>작성일</span></div>
-                                <div><span>내용</span></div>
-                            </li>
+                            {
+                                reviewFilterList.map((a, i) => {
+                                    return (
+                                        <li key={i}>
+                                            <div style={{ marginBottom: '30px' }}>
+                                                <span style={{ marginRight: '30px' }}>{reviewFilterList[i].reviewWriter}</span>
+                                                <span>{reviewFilterList[i].reviewDate}</span>
+                                            </div>
+                                            <div><span>{reviewFilterList[i].reviewContents}</span></div>
+                                        </li>
+                                    )
+                                })
+                            }
                         </ul>
                     </div>
                 </>
@@ -282,7 +320,7 @@ function TabContent({ tab, shoes, id, getQnaData, addQna, qnaList, getQnaList, f
                         <button style={{ background: '#4A55A2' }} onClick={addQna}>작성완료</button>
                     </div>
                     <div className="reviewList">
-                        <table style={{ width: '100%' }}>
+                        <table style={{ width: '100%', margin: '30px 0' }}>
                             <thead>
                                 <tr>
                                     <th style={{ width: '10%' }}>문의유형</th>
